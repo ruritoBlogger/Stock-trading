@@ -1,13 +1,13 @@
-#coding by urf-8
+#coding=UTF-8
 
-import urllib
+import urllib2
 from bs4 import BeautifulSoup
 
-# アクセスするurl
+#アクセスするurl
 url = "http://www.nikkei.com/"
 
 # urlにアクセスした時の返り値
-html = urllib.urlopen(url)
+html = urllib2.urlopen(url)
 
 # htmlをBeautifulSoupで扱う
 soup = BeautifulSoup(html, "html.parser")
