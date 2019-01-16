@@ -1,2 +1,3 @@
-# Stock-trading
-My practice about machine learning
+このコードは第一回Fintech Data Championshipで提出する予定のコードの一部になります。
+/dataファイルにはcsvファイル群を格納しています。(今回使用しているcsvファイル群は公開禁止のためgitignoreに設定しています。)
+
