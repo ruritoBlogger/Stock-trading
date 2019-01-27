@@ -36,5 +36,3 @@ while(True):
     f.write( result + '\n')
 
 f.close()
-
-
