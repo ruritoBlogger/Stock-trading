@@ -4,38 +4,34 @@ from bs4 import BeautifulSoup
 import re
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+import time
 
-# ブラウザを起動する
 driver = webdriver.Chrome(executable_path='/home/rurito/chromedriver')
+#初回起動は時間がかかるので予め起動
+driver.get("https://shikiho.jp/stocks/2121")
+time.sleep(2)
 
-#Mothersの株の情報を持ってくる
-
+#マザーズの銘柄番号を取得する
 f = open('mothers.txt')
 lines = f.readlines()
 
-#mothersの銘柄番号が格納されている配列を回す
+#取得した銘柄番号を用いて業績を取り出す
 for line in lines:
-    #なぜか空白が抜けてない
+    #空白抜き
     line = line.replace(u"	","")
-    # アクセスするURL
     driver.get("https://shikiho.jp/stocks/" + line + "/")
+    time.sleep(0.7) #magic number
 
-    #url = "https://shikiho.jp/stocks/" + "2121" + "/"
-    
-    # HTMLを文字コードをUTF-8に変換してから取得します。
     html = driver.page_source.encode('utf-8')
-
-    # htmlをBeautifulSoupで扱う
     soup = BeautifulSoup(html, "html.parser")
-
-    #target = soup.select_one("#main > div:nth-of-type(1)")
-    #target = soup.select_one("#main > div > div.overview.cfx > div.main > div.title > div > div.name > div")
-    #target = soup.select_one("#main > div > div.section > div:nth-of-type(1) > div.main > div > div.performance > div.matrix > table > tbody > tr:nth-of-type(1)")
-       
-    target = soup.find_all("div")
-
-    for mark in target:
-        if not mark.find_all(class_="table") == None:
-            print(mark.find_all(class_="table")
-
+    #a = soup.select_one("#main > div > div.overview.cfx > div.main > div.title > div > div.name > div").text
+    #print(a)
+    #b = soup.select_one("#main > div > div.section > div:nth-of-type(1) > div.main > div > div.performance > div.matrix > table > tbody > tr:nth-of-type(2) > td:nth-of-type(2)")
+    
+    for i in range(10):
+        for j in range(6):
+            b = soup.select_one("#main > div > div.section > div:nth-of-type(1) > div.main > div > div.performance > div.matrix > table > tbody > tr:nth-of-type(" + str(i + 1) + ") > td:nth-of-type(" + str(j + 1) + ")")
+            if b is None:
+                break
+            print(b.text)
 f.close()
