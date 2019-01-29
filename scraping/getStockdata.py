@@ -27,17 +27,23 @@ for line in lines:
     html = driver.page_source.encode('utf-8')
     soup = BeautifulSoup(html, "html.parser")
     brand_name = soup.select_one("#main > div > div.overview.cfx > div.main > div.title > div > div.name > div").text
-    stock = Stock(line,brand_name)
+    #stock = Stock(line,brand_name)
     #b = soup.select_one("#main > div > div.section > div:nth-of-type(1) > div.main > div > div.performance > div.matrix > table > tbody > tr:nth-of-type(2) > td:nth-of-type(2)")
     
+    print(brand_name)
+    
     for i in range(10):
+        array = []
         year = soup.select_one("#main > div > div.section > div:nth-of-type(1) > div.main > div > div.performance > div.matrix > table > tbody > tr:nth-of-type(" + str(i + 1) + ") > td:nth-of-type(1)")
+        if year is None:
+            continue
+        print(year.text)
         for j in range(6):
             data = soup.select_one("#main > div > div.section > div:nth-of-type(1) > div.main > div > div.performance > div.matrix > table > tbody > tr:nth-of-type(" + str(i + 1) + ") > td:nth-of-type(" + str(j + 2) + ")")
             if data is None:
                 break
-            #print(data.text)
-            print(data.text)
-            stock.setData(year.text,label[j],data.text)
-    stock.output()
+            #stock.setData(year.text,j,data.text)
+            array.append(data.text)
+        print(array)
+    #stock.output()
 f.close()
