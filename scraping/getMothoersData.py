@@ -18,6 +18,10 @@ count = False
 n = 2
 while(True):
     
+    #強制終了
+    if n == 285:
+        break
+
     if soup.select_one("#HPB_TABLE_4_A_180210131757 > tbody > tr:nth-of-type(" + str(n) + ") > td:nth-of-type(3)") == None:
         if count == True:
             break
@@ -28,11 +32,10 @@ while(True):
     target = soup.select_one("#HPB_TABLE_4_A_180210131757 > tbody > tr:nth-of-type(" + str(n) + ") > td:nth-of-type(3)").string
     #print(soup.select_one("#HPB_TABLE_4_A_180210131757 > tbody > tr:nth-of-type(" + str(n) + ") > td:nth-of-type(3)").string)
     
-    result = target.replace("	","")
-    print(result)
+    print(target)
     n += 1;
     count = False
 
-    f.write( result + '\n')
+    f.write( target + '\n')
 
 f.close()
