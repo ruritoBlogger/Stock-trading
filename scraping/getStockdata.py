@@ -14,7 +14,7 @@ driver.get("https://shikiho.jp/stocks/2121")
 time.sleep(2)
 
 #マザーズの銘柄番号を取得する
-f = open('mothers.txt')
+f = open('mothers_stock_number.txt')
 lines = f.readlines()
 label = ["売上高","営業利益","経常利益","純利益","1株益","1株配"]
 
