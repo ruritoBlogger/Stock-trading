@@ -2,16 +2,19 @@
 import pandas as pd
 import csv
 import re
+import numpy as np
 
 #df = pd.read_csv("test.csv")
 
 #for line in df:
     #print(line)
 
-def getStockdata(key,per):
+def getStockdata(key,per,percent):
     f = open('get_2018_mothers_stock_data.txt')
     lines = f.readlines()
 
+    correct = 0
+    false = 0
     num = 0
     start = 0
     last = 0
@@ -28,10 +31,22 @@ def getStockdata(key,per):
                 brand_num = next_num
                 continue
             else:
-                print("start is  "+str(start))
-                print("last is  "+ str(last))
-                print("brand_num  is  "+ str(brand_num))
-                print("per  is  "+ str(per))
+                if(start > last):
+                    #print("per  is  "+ str(per) + "  and  stock data uped")
+                    if(per < percent):
+                        return True
+                    else:
+                        return False
+                else:
+                    #print("per  is  "+ str(per) + "  and  stock data downed")
+                    if(per > percent):
+                        return True
+                    else:
+                        return False
+                #print("start is  "+str(start))
+                #print("last is  "+ str(last))
+                #print("brand_num  is  "+ str(brand_num))
+                #print("per  is  "+ str(per))
                 brand_num = next_num
                 continue
         tmp = line.rstrip('\n')
@@ -53,38 +68,59 @@ def getStockdata(key,per):
             start = int(tmp[num:n])
             flag = False
 
-with open('test.csv','r',newline='',encoding='utf-8') as f:
+def check_per(key):
 
-    r = csv.reader(f)
+    with open('test.csv','r',newline='',encoding='utf-8') as f:
+
+        r = csv.reader(f)
     
-    pattern = r"予"
-    target = r"連"
-    flag = True
-    n = 1
-    for l in r:
-        #print(l[1].rstrip('\n')+"番の企業の"+l[3]+"の時期のPERは"+l[8])
-        #tmp = l[3]
-        #tmp2 = re.compile(pattern)
-        #result = tmp2.match(tmp)
-        #print(result)
-        #print(l[3][n-1])
-        if(flag):
-            flag = False
-            continue
-        if(l[8] == "--"):
-            continue
-        if(l[3][n-1] != "連"):
-            continue
-        #print(l[3][n+1])
-        if(l[3][n+1] != "8"):
-            continue
-        #elif(l[8][0] = "-"):
-            #continue
-        #print(l)
+        correct = 0
+        false = 0
+        pattern = r"予"
+        target = r"連"
+        flag = True
+        n = 1
+        
+        for l in r:
+            #print(l[1].rstrip('\n')+"番の企業の"+l[3]+"の時期のPERは"+l[8])
+            #tmp = l[3]
+            #tmp2 = re.compile(pattern)
+            #result = tmp2.match(tmp)
+            #print(result)
+            #print(l[3][n-1])
+            if(flag):
+                flag = False
+                continue
+            if(l[8] == "--"):
+                continue
+            if(l[3][n-1] != "連"):
+                continue
+            #print(l[3][n+1])
+            if(l[3][n+1] != "8"):
+                continue
+            #print(l)
 
-        getStockdata(float(l[1]),float(l[8]))
+            if(getStockdata(float(l[1]),float(l[8]),key)):
+                correct += 1
+            else:
+                false += 1
 
-        print(l[1].rstrip('\n')+"番の企業の"+l[3]+"の時期のPERは"+l[8])
+            #print(l[1].rstrip('\n')+"番の企業の"+l[3]+"の時期のPERは"+l[8])
 
+    #print("correct  is  "+ str(correct) + "  and false  is  "+ str(false))
+    #print("%  is  " + str(correct / (correct + false)) )  
+    return correct / (correct + false)
 
+match_point = 0
+goodest = 0
+key_per = 0
+for key in np.arange(0,200,0.5):
+    match_point = check_per(key)
+    print("match_point  is  "+ str(match_point) + "  and  percent  is  "+ str(key) )
+    if(goodest < match_point):
+        goodest = match_point
+        key_per = key
+
+print("This is a result")
+print("best  match_point  is  " + str(goodest) + "  at  "+ str(key_per))
 
