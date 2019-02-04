@@ -31,6 +31,9 @@ def getStockdata(key,per,percent):
                 brand_num = next_num
                 continue
             else:
+                if(percent == 0):
+                    continue
+                per = start / per
                 if(start > last):
                     #print("per  is  "+ str(per) + "  and  stock data uped")
                     if(per < percent):
