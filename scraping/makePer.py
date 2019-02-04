@@ -34,7 +34,7 @@ def getStockdata(key,per,percent):
                 if(percent == 0):
                     continue
                 per = start / per
-                if(start > last):
+                if(start < last):
                     #print("per  is  "+ str(per) + "  and  stock data uped")
                     if(per < percent):
                         return True
@@ -117,7 +117,7 @@ def check_per(key):
 match_point = 0
 goodest = 0
 key_per = 0
-for key in np.arange(0,200,0.5):
+for key in np.arange(-200,200,0.5):
     match_point = check_per(key)
     print("match_point  is  "+ str(match_point) + "  and  percent  is  "+ str(key) )
     if(goodest < match_point):
@@ -126,4 +126,3 @@ for key in np.arange(0,200,0.5):
 
 print("This is a result")
 print("best  match_point  is  " + str(goodest) + "  at  "+ str(key_per))
-
