@@ -10,7 +10,7 @@ import numpy as np
     #print(line)
 
 def getStockdata(key,per,percent):
-    f = open('get_2018_mothers_stock_data.txt')
+    f = open('get_2018_stock_data.txt')
     lines = f.readlines()
 
     correct = 0
@@ -27,25 +27,24 @@ def getStockdata(key,per,percent):
     
         if(line[n] == " "):
             flag = True
-            if(brand_num != key):
+            if(brand_num != int(key)):
                 brand_num = next_num
                 continue
             else:
-                if(percent == 0):
-                    continue
                 per = start / per
                 if(start < last):
                     #print("per  is  "+ str(per) + "  and  stock data uped")
                     if(per < percent):
-                        return True
+                        return 1
                     else:
-                        return False
+                        return 2
                 else:
+                    return 0
                     #print("per  is  "+ str(per) + "  and  stock data downed")
-                    if(per > percent):
-                        return True
-                    else:
-                        return False
+                    #if(per > percent):
+                        #return True
+                    #else:
+                        #return False
                 #print("start is  "+str(start))
                 #print("last is  "+ str(last))
                 #print("brand_num  is  "+ str(brand_num))
@@ -66,14 +65,14 @@ def getStockdata(key,per,percent):
             n += 1
 
         last = next_num
-        next_num = int(tmp[num:n])
+        next_num = int(float(tmp[num:n]))
         if(flag):
-            start = int(tmp[num:n])
+            start = int(float(tmp[num:n]))
             flag = False
 
-def check_per(key):
+def check_percent(key):
 
-    with open('test.csv','r',newline='',encoding='utf-8') as f:
+    with open('toushou.csv','r',newline='',encoding='utf-8') as f:
 
         r = csv.reader(f)
     
@@ -101,24 +100,27 @@ def check_per(key):
             #print(l[3][n+1])
             if(l[3][n+1] != "8"):
                 continue
-            #print(l)
 
-            if(getStockdata(float(l[1]),float(l[8]),key)):
+            if(getStockdata(int(l[1]),float(l[8].replace(',','.')),key) == 1):
+                print("correct")
                 correct += 1
-            else:
+            elif(getStockdata(int(l[1]),float(l[8].replace(',','.')),key) == 2):
+                print("false")
                 false += 1
 
             #print(l[1].rstrip('\n')+"番の企業の"+l[3]+"の時期のPERは"+l[8])
 
     #print("correct  is  "+ str(correct) + "  and false  is  "+ str(false))
-    #print("%  is  " + str(correct / (correct + false)) )  
+    #print("%  is  " + str(correct / (correct + false)) )
+    if(correct + false == 0):
+        return 0
     return correct / (correct + false)
 
 match_point = 0
 goodest = 0
 key_per = 0
-for key in np.arange(-200,200,0.5):
-    match_point = check_per(key)
+for key in np.arange(5,200,5):
+    match_point = check_percent(key)
     print("match_point  is  "+ str(match_point) + "  and  percent  is  "+ str(key) )
     if(goodest < match_point):
         goodest = match_point
